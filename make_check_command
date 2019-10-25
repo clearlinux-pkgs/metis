@@ -1,0 +1,14 @@
+pushd graphs
+LD_LIBRARY_PATH=%{buildroot}/usr/lib64:$LD_LIBRARY_PATH %{buildroot}/usr/bin/gpmetis test.mgraph 4
+LD_LIBRARY_PATH=%{buildroot}/usr/lib64:$LD_LIBRARY_PATH %{buildroot}/usr/bin/gpmetis 4elt.graph 
+LD_LIBRARY_PATH=%{buildroot}/usr/lib64:$LD_LIBRARY_PATH %{buildroot}/usr/bin/gpmetis copter2.graph 4
+LD_LIBRARY_PATH=%{buildroot}/usr/lib64:$LD_LIBRARY_PATH %{buildroot}/usr/bin/gpmetis mdual.graph
+LD_LIBRARY_PATH=%{buildroot}/usr/lib64:$LD_LIBRARY_PATH %{buildroot}/usr/bin/ndmetis 4elt.graph
+LD_LIBRARY_PATH=%{buildroot}/usr/lib64:$LD_LIBRARY_PATH %{buildroot}/usr/bin/ndmetis copter2.graph 4
+LD_LIBRARY_PATH=%{buildroot}/usr/lib64:$LD_LIBRARY_PATH %{buildroot}/usr/bin/ndmetis mdual.graph
+LD_LIBRARY_PATH=%{buildroot}/usr/lib64:$LD_LIBRARY_PATH %{buildroot}/usr/bin/mpmetis metis.mesh 2
+LD_LIBRARY_PATH=%{buildroot}/usr/lib64:$LD_LIBRARY_PATH %{buildroot}/usr/bin/m2gmetis metis.mesh 2
+LD_LIBRARY_PATH=%{buildroot}/usr/lib64:$LD_LIBRARY_PATH %{buildroot}/usr/bin/ndmetis mdual.graph
+LD_LIBRARY_PATH=%{buildroot}/usr/lib64:$LD_LIBRARY_PATH %{buildroot}/usr/bin/ndmetis mdual.graph
+LD_LIBRARY_PATH=%{buildroot}/usr/lib64:$LD_LIBRARY_PATH %{buildroot}/usr/bin/graphchk 4elt.graph
+popd
