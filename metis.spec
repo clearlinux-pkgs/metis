@@ -4,7 +4,7 @@
 #
 Name     : metis
 Version  : 5.1.0
-Release  : 7
+Release  : 9
 URL      : http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/metis-5.1.0.tar.gz
 Source0  : http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/metis-5.1.0.tar.gz
 Summary  : No detailed summary available
@@ -70,7 +70,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1572283478
+export SOURCE_DATE_EPOCH=1572384480
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -81,6 +81,21 @@ export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
 export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
 export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
 export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
+%cmake .. -DGKLIB_PATH=../GKlib -DSHARED:BOOL=TRUE
+make  %{?_smp_mflags}  VERBOSE=1
+popd
+mkdir -p clr-build-avx2
+pushd clr-build-avx2
+export GCC_IGNORE_WERROR=1
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 -march=haswell "
+export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 -march=haswell "
+export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 -march=haswell "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 -march=haswell "
+export CFLAGS="$CFLAGS -march=haswell -m64"
+export CXXFLAGS="$CXXFLAGS -march=haswell -m64"
 %cmake .. -DGKLIB_PATH=../GKlib -DSHARED:BOOL=TRUE
 make  %{?_smp_mflags}  VERBOSE=1
 popd
@@ -106,16 +121,21 @@ LD_LIBRARY_PATH=%{buildroot}/usr/lib64:$LD_LIBRARY_PATH %{buildroot}/usr/bin/gra
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1572283478
+export SOURCE_DATE_EPOCH=1572384480
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/metis
 cp %{_builddir}/metis-5.1.0/LICENSE.txt %{buildroot}/usr/share/package-licenses/metis/a7c3a4f7dcf7a014c7dfdd3f8752d699eb7f7c2e
+pushd clr-build-avx2
+%make_install_avx2  || :
+popd
 pushd clr-build
 %make_install
 popd
 ## install_append content
 mkdir -p %{buildroot}/usr/lib64
 mv %{buildroot}/usr/lib/* %{buildroot}/usr/lib64
+mkdir -p %{buildroot}/usr/lib64/haswell/
+cp ./clr-build-avx2/libmetis/*.so %{buildroot}/usr/lib64/haswell
 ## install_append end
 
 %files
@@ -126,6 +146,12 @@ mv %{buildroot}/usr/lib/* %{buildroot}/usr/lib64
 /usr/bin/cmpfillin
 /usr/bin/gpmetis
 /usr/bin/graphchk
+/usr/bin/haswell/cmpfillin
+/usr/bin/haswell/gpmetis
+/usr/bin/haswell/graphchk
+/usr/bin/haswell/m2gmetis
+/usr/bin/haswell/mpmetis
+/usr/bin/haswell/ndmetis
 /usr/bin/m2gmetis
 /usr/bin/mpmetis
 /usr/bin/ndmetis
@@ -136,6 +162,7 @@ mv %{buildroot}/usr/lib/* %{buildroot}/usr/lib64
 
 %files lib
 %defattr(-,root,root,-)
+/usr/lib64/haswell/libmetis.so
 /usr/lib64/libmetis.so
 
 %files license
