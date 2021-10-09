@@ -4,7 +4,7 @@
 #
 Name     : metis
 Version  : 5.1.0
-Release  : 11
+Release  : 12
 URL      : http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/metis-5.1.0.tar.gz
 Source0  : http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/metis-5.1.0.tar.gz
 Summary  : No detailed summary available
@@ -81,7 +81,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1633801868
+export SOURCE_DATE_EPOCH=1633823551
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -134,7 +134,7 @@ LD_LIBRARY_PATH=%{buildroot}/usr/lib64:$LD_LIBRARY_PATH %{buildroot}/usr/bin/gra
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1633801868
+export SOURCE_DATE_EPOCH=1633823551
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/metis
 cp %{_builddir}/metis-5.1.0/LICENSE.txt %{buildroot}/usr/share/package-licenses/metis/a7c3a4f7dcf7a014c7dfdd3f8752d699eb7f7c2e
@@ -148,9 +148,6 @@ popd
 ## install_append content
 mkdir -p %{buildroot}/usr/lib64
 mv %{buildroot}/usr/lib/* %{buildroot}/usr/lib64
-mkdir -p %{buildroot}/usr/lib64/haswell/
-cp ./clr-build-avx2/libmetis/*.so %{buildroot}/usr/lib64/haswell
-
 ## install_append end
 
 %files
@@ -176,7 +173,6 @@ cp ./clr-build-avx2/libmetis/*.so %{buildroot}/usr/lib64/haswell
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/haswell/libmetis.so
 /usr/lib64/libmetis.so
 /usr/share/clear/optimized-elf/e8c86ef12670df71490b8906e2c31c8ff60c11d511d8bed8e5e291dc095b4548
 
